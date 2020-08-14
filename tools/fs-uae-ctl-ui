@@ -2,10 +2,10 @@
 
 import sys
 import os
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtWidgets
 import fsuae
 
-class DriveSelector(QtGui.QWidget):
+class DriveSelector(QtWidgets.QWidget):
 
     error = QtCore.pyqtSignal('QString')
 
@@ -16,16 +16,16 @@ class DriveSelector(QtGui.QWidget):
         self.slot = slot
         self.filt = filt
         self.settings = settings
-        QtGui.QWidget.__init__(self, *args)
-        self.label = QtGui.QLabel(name, self)
-        self.input = QtGui.QLineEdit(self)
-        self.pick = QtGui.QPushButton("...", self)
-        self.eject = QtGui.QPushButton("\u23cf", self)
+        QtWidgets.QWidget.__init__(self, *args)
+        self.label = QtWidgets.QLabel(name, self)
+        self.input = QtWidgets.QLineEdit(self)
+        self.pick = QtWidgets.QPushButton("...", self)
+        self.eject = QtWidgets.QPushButton("\u23cf", self)
         self.pick.setMaximumWidth(32)
         self.eject.setMaximumWidth(32)
-        layout = QtGui.QHBoxLayout()
+        layout = QtWidgets.QHBoxLayout()
         layout.setSpacing(2)
-        layout.setMargin(2)
+        layout.setContentsMargins(2, 2, 2, 2)
         layout.addWidget(self.label,0,QtCore.Qt.AlignLeft)
         layout.addWidget(self.input,1)
         layout.addWidget(self.pick)
@@ -62,7 +62,7 @@ class DriveSelector(QtGui.QWidget):
     def onPick(self):
         key = self.name + "/dir"
         dir_path = self.settings.value(key)
-        path = QtGui.QFileDialog.getOpenFileName(self, "Pick Image", dir_path, self.filt)
+        path, _filter = QtWidgets.QFileDialog.getOpenFileName(self, "Pick Image", dir_path, self.filt)
         if path != "":
             dir_path = os.path.dirname(path)
             self.settings.setValue(key, dir_path)
@@ -73,9 +73,9 @@ class DriveSelector(QtGui.QWidget):
                 self.error.emit(e.msg)
 
 
-class UIWindow(QtGui.QMainWindow):
+class UIWindow(QtWidgets.QMainWindow):
     def __init__(self, emu, *args):
-        QtGui.QMainWindow.__init__(self, *args)
+        QtWidgets.QMainWindow.__init__(self, *args)
         self.emu = emu
         self.floppy_widgets = [None] * 4
         self.cdrom_widgets = [None] * 4
@@ -86,24 +86,24 @@ class UIWindow(QtGui.QMainWindow):
         self.setCentralWidget(tab)
 
         # tool bar
-        tb = QtGui.QToolBar("Tools")
+        tb = QtWidgets.QToolBar("Tools")
         self.addToolBar(tb)
         action = tb.addAction("Connect")
         action.triggered.connect(self.onConnect)
 
         # status bar
-        self.status = QtGui.QStatusBar()
+        self.status = QtWidgets.QStatusBar()
         self.setStatusBar(self.status)
         self.status.showMessage("Ready.")
 
     def _create_tab(self):
-        w = QtGui.QTabWidget()
+        w = QtWidgets.QTabWidget()
         settings = QtCore.QSettings("FS-UAE", "fs-uae-ctl-ui")
 
         # floppies tab
-        fw = QtGui.QWidget()
+        fw = QtWidgets.QWidget()
         w.addTab(fw, "Floppies")
-        l = QtGui.QVBoxLayout()
+        l = QtWidgets.QVBoxLayout()
         l.setSpacing(0)
         fw.setLayout(l)
         floppy_filter = "ADF Image (*.adf);;All Files (*.*)"
@@ -118,9 +118,9 @@ class UIWindow(QtGui.QMainWindow):
             self.floppy_widgets[i] = f
 
         # CDROMs tab
-        fc = QtGui.QWidget()
+        fc = QtWidgets.QWidget()
         w.addTab(fc, "CDROMs")
-        l = QtGui.QVBoxLayout()
+        l = QtWidgets.QVBoxLayout()
         l.setSpacing(0)
         fc.setLayout(l)
         cdrom_filter = "CDROM Image (*.iso *.img);;All Files (*.*)"
@@ -176,7 +176,7 @@ class UIWindow(QtGui.QMainWindow):
 
 def main(args):
     emu=fsuae.Emu()
-    app=QtGui.QApplication(args)
+    app=QtWidgets.QApplication(args)
     win=UIWindow(emu)
     win.show()
     sys.exit(app.exec_())
