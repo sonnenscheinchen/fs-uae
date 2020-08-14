@@ -26,9 +26,6 @@
 #ifdef USE_SDL2
 #include <SDL.h>
 #endif
-#ifdef WITH_LUA
-#include "emu_lua.h"
-#endif
 
 #define debug_printf(format, ...)
 //#define debug_printf printf
