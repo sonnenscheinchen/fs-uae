@@ -1,3 +1,12 @@
+This branch is currently FS-UAE 3.0.4 plus lallafa's lua patches included.
+The source code can be found on https://github.com/cnvogelg/fs-uae/tree/lua
+Other changes: ported tools/fs-uae-ctl-ui to PyQt5, added tools/fs-uae-systray
+
+Original readme follows...
+
+
+
+
 FS-UAE README
 =============
 
